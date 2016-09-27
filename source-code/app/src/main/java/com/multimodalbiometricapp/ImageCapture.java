@@ -53,11 +53,10 @@ public class ImageCapture extends Activity {
 
     private ImageView imgPreview;
     private VideoView videoPreview;
-    private Button btnCapturePicture, btnRecordVideo, btnSendToserver;
+    private Button btnCapturePicture, btnSendToserver;
 
     private String KEY_IMAGE = "image";
     private String KEY_NAME = "name";
-
 
     private Bitmap bitmap;
 
@@ -69,30 +68,16 @@ public class ImageCapture extends Activity {
         imgPreview = (ImageView) findViewById(R.id.imgPreview);
         videoPreview = (VideoView) findViewById(R.id.videoPreview);
         btnCapturePicture = (Button) findViewById(R.id.btnCapturePicture);
-        btnRecordVideo = (Button) findViewById(R.id.btnRecordVideo);
         btnSendToserver = (Button) findViewById(R.id.btnSendToServer);
 
         /**
          * Capture image button click event
          */
         btnCapturePicture.setOnClickListener(new View.OnClickListener() {
-
             @Override
             public void onClick(View v) {
                 // capture picture
                 captureImage();
-            }
-        });
-
-        /**
-         * Record video button click event
-         */
-        btnRecordVideo.setOnClickListener(new View.OnClickListener() {
-
-            @Override
-            public void onClick(View v) {
-                // record video
-                recordVideo();
             }
         });
 
@@ -174,8 +159,6 @@ public class ImageCapture extends Activity {
         requestQueue.add(stringRequest);
     }
 
-
-
     public String getStringImage(Bitmap bmp){
         ByteArrayOutputStream baos = new ByteArrayOutputStream();
         bmp.compress(Bitmap.CompressFormat.JPEG, 100, baos);
@@ -183,6 +166,7 @@ public class ImageCapture extends Activity {
         String encodedImage = Base64.encodeToString(imageBytes, Base64.DEFAULT);
         return encodedImage;
     }
+
     /**
      * Capturing Camera Image will lauch camera app requrest image capture
      */
@@ -218,23 +202,6 @@ public class ImageCapture extends Activity {
         fileUri = savedInstanceState.getParcelable("file_uri");
     }
 
-    /**
-     * Recording video
-     */
-    private void recordVideo() {
-        Intent intent = new Intent(MediaStore.ACTION_VIDEO_CAPTURE);
-
-        fileUri = getOutputMediaFileUri(MEDIA_TYPE_VIDEO);
-
-        // set video quality
-        intent.putExtra(MediaStore.EXTRA_VIDEO_QUALITY, 1);
-
-        intent.putExtra(MediaStore.EXTRA_OUTPUT, fileUri); // set the image file
-        // name
-
-        // start the video capture Intent
-        startActivityForResult(intent, CAMERA_CAPTURE_VIDEO_REQUEST_CODE);
-    }
 
     /**
      * Receiving activity result method will be called after closing the camera

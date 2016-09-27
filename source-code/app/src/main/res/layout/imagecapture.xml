@@ -23,14 +23,6 @@
 
         <!-- Record video button -->
         <Button
-            android:id="@+id/btnRecordVideo"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Record a Video"
-            android:layout_marginBottom="10dp"/>
-
-        <!-- Record video button -->
-        <Button
             android:id="@+id/btnSendToServer"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"

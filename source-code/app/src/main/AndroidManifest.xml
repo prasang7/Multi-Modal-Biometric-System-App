@@ -3,8 +3,6 @@
     package="com.multimodalbiometricapp">
 
     <uses-permission android:name="android.permission.INTERNET"/>
-
-    <!-- Accessing camera hardware -->
     <uses-feature android:name="android.hardware.camera" />
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.RECORD_AUDIO" />
@@ -21,16 +19,13 @@
             android:screenOrientation="landscape">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAINACTIVITY" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -40,6 +35,9 @@
     <!--
         Image Upload Tutorial:
         https://www.simplifiedcoding.net/android-volley-tutorial-to-upload-image-to-server/
+
+        Image Capture tutorial:
+        http://www.androidhive.info/2013/09/android-working-with-camera-api/
     -->
 
 </manifest>

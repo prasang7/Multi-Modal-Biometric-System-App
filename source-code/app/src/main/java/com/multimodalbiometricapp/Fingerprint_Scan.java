@@ -41,6 +41,7 @@ public class Fingerprint_Scan extends AppCompatActivity {
     private KeyStore keyStore;
     private KeyGenerator keyGenerator;
     private Cipher cipher;
+    private FingerprintManager.CryptoObject cryptoObject;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -120,6 +121,40 @@ public class Fingerprint_Scan extends AppCompatActivity {
             throw new RuntimeException(e);
         }
 
+
+        //***** Checks over *******
+
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return;
+        }
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!fingerprintManager.hasEnrolledFingerprints()) {
+
+                // This happens when no fingerprints are registered.
+                Toast.makeText(this,
+                        "Register at least one fingerprint in Settings",
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+
+        // ** looks small, but it's important :P
+        generateKey();
+
+        if (cipherInit()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                cryptoObject =
+                        new FingerprintManager.CryptoObject(cipher);
+            }
+        }
 
     }
 

@@ -95,8 +95,17 @@ public class Fingerprint_Scan extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 String s = intent.getStringExtra("mess");
 
-                Toast.makeText(Fingerprint_Scan.this, s + "<-", Toast.LENGTH_SHORT).show();
+                if (s.equals("")) {
 
+                }
+                else if (s.equals("")) {
+
+                }
+                else if (s.equals("")) {
+
+                }
+
+                Toast.makeText(Fingerprint_Scan.this, s + "<-", Toast.LENGTH_SHORT).show();
             }
         };
     }

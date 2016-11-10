@@ -6,15 +6,19 @@ import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
+import android.security.keystore.KeyGenParameterSpec;
 import android.security.keystore.KeyProperties;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.widget.Toast;
 
+import java.io.IOException;
+import java.security.InvalidAlgorithmParameterException;
 import java.security.KeyStore;
 import java.security.NoSuchAlgorithmException;
 import java.security.NoSuchProviderException;
+import java.security.cert.CertificateException;
 
 import javax.crypto.KeyGenerator;
 
@@ -24,6 +28,7 @@ import javax.crypto.KeyGenerator;
 
 public class Fingerprint_Scan extends AppCompatActivity {
 
+    private static final String KEY_NAME = "example_key";
     private FingerprintManager fingerprintManager;
     private KeyguardManager keyguardManager;
     private KeyStore keyStore;
@@ -38,7 +43,6 @@ public class Fingerprint_Scan extends AppCompatActivity {
                 (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
         fingerprintManager =
                 (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             if (!keyguardManager.isKeyguardSecure()) {
@@ -55,7 +59,6 @@ public class Fingerprint_Scan extends AppCompatActivity {
             Toast.makeText(this,
                     "Fingerprint authentication permission not enabled",
                     Toast.LENGTH_LONG).show();
-
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -68,9 +71,6 @@ public class Fingerprint_Scan extends AppCompatActivity {
                 return;
             }
         }
-
-
-
 
     }
 
@@ -92,10 +92,28 @@ public class Fingerprint_Scan extends AppCompatActivity {
                     "Failed to get KeyGenerator instance", e);
         }
 
+        try {
+            keyStore.load(null);
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                keyGenerator.init(new
+                        KeyGenParameterSpec.Builder(KEY_NAME,
+                        KeyProperties.PURPOSE_ENCRYPT |
+                                KeyProperties.PURPOSE_DECRYPT)
+                        .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
+                        .setUserAuthenticationRequired(true)
+                        .setEncryptionPaddings(
+                                KeyProperties.ENCRYPTION_PADDING_PKCS7)
+                        .build());
+            }
+            keyGenerator.generateKey();
+        } catch (NoSuchAlgorithmException |
+                InvalidAlgorithmParameterException
+                | CertificateException | IOException e) {
+            throw new RuntimeException(e);
+        }
+
 
     }
-
-
 
 
 }

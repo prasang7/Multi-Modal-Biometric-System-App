@@ -1,6 +1,7 @@
 package com.multimodalbiometricapp;
 
 import android.Manifest;
+import android.annotation.TargetApi;
 import android.app.KeyguardManager;
 import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
@@ -81,6 +82,35 @@ public class Fingerprint_Scan extends AppCompatActivity {
             }
         }
 
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+            if (!fingerprintManager.hasEnrolledFingerprints()) {
+
+                // This happens when no fingerprints are registered.
+                Toast.makeText(this,
+                        "Register at least one fingerprint in Settings",
+                        Toast.LENGTH_LONG).show();
+                return;
+            }
+        }
+
+        generateKey();
+
+        if (cipherInit()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                cryptoObject =
+                        new FingerprintManager.CryptoObject(cipher);
+            }
+        }
+
+
+        if (cipherInit()) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                cryptoObject = new FingerprintManager.CryptoObject(cipher);
+            }
+            FingerprintHandler helper = new FingerprintHandler(this);
+            helper.startAuth(fingerprintManager, cryptoObject);
+        }
     }
 
 
@@ -120,44 +150,9 @@ public class Fingerprint_Scan extends AppCompatActivity {
                 | CertificateException | IOException e) {
             throw new RuntimeException(e);
         }
-
-
-        //***** Checks over *******
-
-
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
-            return;
-        }
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!fingerprintManager.hasEnrolledFingerprints()) {
-
-                // This happens when no fingerprints are registered.
-                Toast.makeText(this,
-                        "Register at least one fingerprint in Settings",
-                        Toast.LENGTH_LONG).show();
-                return;
-            }
-        }
-
-        // ** looks small, but it's important :P
-        generateKey();
-
-        if (cipherInit()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                cryptoObject =
-                        new FingerprintManager.CryptoObject(cipher);
-            }
-        }
-
     }
 
+    @TargetApi(Build.VERSION_CODES.M)
     public boolean cipherInit() {
         try {
             cipher = Cipher.getInstance(

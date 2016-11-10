@@ -17,18 +17,18 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".ImageCapture"
-            android:configChanges="orientation|keyboard|keyboardHidden"
-            android:screenOrientation="landscape">
+        <activity android:name=".Fingerprint_Scan">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
 
-        <activity android:name=".MainActivity">
+        <activity android:name=".ImageCapture"
+            android:configChanges="orientation|keyboard|keyboardHidden"
+            android:screenOrientation="landscape">
             <intent-filter>
-                <action android:name="android.intent.action.MAINACTIVITY" />
+                <action android:name="android.intent.action.IMAGECAPTURE" />
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </activity>
@@ -36,6 +36,10 @@
     </application>
 
     <!--
+
+        Fingerprint Tutorial
+        http://www.techotopia.com/index.php/An_Android_Fingerprint_Authentication_Tutorial
+
         Image Upload Tutorial:
         https://www.simplifiedcoding.net/android-volley-tutorial-to-upload-image-to-server/
 

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
 import android.view.WindowManager;
+import android.widget.RelativeLayout;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -51,13 +53,15 @@ public class Fingerprint_Scan extends AppCompatActivity {
     private Cipher cipher;
     private FingerprintManager.CryptoObject cryptoObject;
     boolean isAuthenticated;
-
     BroadcastReceiver receiver;
+
+    RelativeLayout rl_parent;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fingerprint_scan_layout);
+        rl_parent = (RelativeLayout)findViewById(R.id.rl_fingerprint_parent);
 
         keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
 
@@ -95,14 +99,14 @@ public class Fingerprint_Scan extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 String s = intent.getStringExtra("mess");
 
-                if (s.equals("")) {
-
+                if (s.equals("success")) {
+                    rl_parent.setBackgroundColor(Color.parseColor("#228B22"));
                 }
-                else if (s.equals("")) {
-
+                else if (s.equals("fail")) {
+                    rl_parent.setBackgroundColor(Color.parseColor("#FF4C4C"));
                 }
-                else if (s.equals("")) {
-
+                else if (s.equals("auth_err")) {
+                    rl_parent.setBackgroundColor(Color.parseColor("FFFF00"));
                 }
 
                 Toast.makeText(Fingerprint_Scan.this, s + "<-", Toast.LENGTH_SHORT).show();

@@ -19,6 +19,7 @@ public class FingerprintHandler extends
 
     private CancellationSignal cancellationSignal;
     private Context appContext;
+    public boolean authenticationSuccessfull;
 
     public FingerprintHandler(Context context) {
         appContext = context;
@@ -26,6 +27,8 @@ public class FingerprintHandler extends
 
     public void startAuth(FingerprintManager manager,
                           FingerprintManager.CryptoObject cryptoObject) {
+
+        authenticationSuccessfull = false;
 
         cancellationSignal = new CancellationSignal();
 
@@ -43,6 +46,8 @@ public class FingerprintHandler extends
         Toast.makeText(appContext,
                 "Authentication error\n" + errString,
                 Toast.LENGTH_LONG).show();
+
+        authenticationSuccessfull = false;
     }
 
     @Override
@@ -58,14 +63,16 @@ public class FingerprintHandler extends
         Toast.makeText(appContext,
                 "Authentication failed.",
                 Toast.LENGTH_LONG).show();
+
+        authenticationSuccessfull = false;
     }
 
     @Override
     public void onAuthenticationSucceeded(
             FingerprintManager.AuthenticationResult result) {
 
-        Toast.makeText(appContext,
-                "Authentication succeeded.",
-                Toast.LENGTH_LONG).show();
+        Toast.makeText(appContext, "Authentication succeeded.", Toast.LENGTH_LONG).show();
+
+        authenticationSuccessfull = true;
     }
 }

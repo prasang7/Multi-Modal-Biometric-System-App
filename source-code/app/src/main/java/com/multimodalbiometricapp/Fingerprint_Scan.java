@@ -13,6 +13,8 @@ import android.security.keystore.KeyProperties;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
+import android.view.KeyEvent;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.io.IOException;
@@ -43,66 +45,35 @@ public class Fingerprint_Scan extends AppCompatActivity {
     private KeyGenerator keyGenerator;
     private Cipher cipher;
     private FingerprintManager.CryptoObject cryptoObject;
+    boolean isAuthenticated;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fingerprint_scan_layout);
 
-        keyguardManager =
-                (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
-        fingerprintManager =
-                (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
+        keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
+
+        fingerprintManager = (FingerprintManager) getSystemService(FINGERPRINT_SERVICE);
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.JELLY_BEAN) {
             if (!keyguardManager.isKeyguardSecure()) {
-
-                Toast.makeText(this,
-                        "Lock screen security not enabled in Settings",
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Lock screen security not enabled in Settings", Toast.LENGTH_LONG).show();
                 return;
             }
         }
-        if (ActivityCompat.checkSelfPermission(this,
-                Manifest.permission.USE_FINGERPRINT) !=
-                PackageManager.PERMISSION_GRANTED) {
-            Toast.makeText(this,
-                    "Fingerprint authentication permission not enabled",
-                    Toast.LENGTH_LONG).show();
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.USE_FINGERPRINT) != PackageManager.PERMISSION_GRANTED) {
+            Toast.makeText(this, "Fingerprint authentication permission not enabled", Toast.LENGTH_LONG).show();
             return;
         }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
             if (!fingerprintManager.hasEnrolledFingerprints()) {
-
-                // This happens when no fingerprints are registered.
-                Toast.makeText(this,
-                        "Register at least one fingerprint in Settings",
-                        Toast.LENGTH_LONG).show();
-                return;
-            }
-        }
-
-
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-            if (!fingerprintManager.hasEnrolledFingerprints()) {
-
-                // This happens when no fingerprints are registered.
-                Toast.makeText(this,
-                        "Register at least one fingerprint in Settings",
-                        Toast.LENGTH_LONG).show();
+                Toast.makeText(this, "Register at least one fingerprint in Settings", Toast.LENGTH_LONG).show();
                 return;
             }
         }
 
         generateKey();
-
-        if (cipherInit()) {
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                cryptoObject =
-                        new FingerprintManager.CryptoObject(cipher);
-            }
-        }
-
 
         if (cipherInit()) {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
@@ -112,7 +83,6 @@ public class Fingerprint_Scan extends AppCompatActivity {
             helper.startAuth(fingerprintManager, cryptoObject);
         }
     }
-
 
     protected void generateKey() {
         try {
@@ -178,5 +148,4 @@ public class Fingerprint_Scan extends AppCompatActivity {
             throw new RuntimeException("Failed to init Cipher", e);
         }
     }
-
 }

@@ -3,11 +3,13 @@ package com.multimodalbiometricapp;
 import android.Manifest;
 import android.annotation.TargetApi;
 import android.content.Context;
+import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.hardware.fingerprint.FingerprintManager;
 import android.os.Build;
 import android.os.CancellationSignal;
 import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.LocalBroadcastManager;
 import android.widget.Toast;
 
 /**
@@ -19,18 +21,25 @@ public class FingerprintHandler extends
 
     private CancellationSignal cancellationSignal;
     private Context appContext;
-    public boolean authenticationSuccessfull;
+
+    LocalBroadcastManager broadcaster;
+
+    public String COPA_RESULT = "resu";
+
+    public String COPA_MESSAGE = "mess";
 
     public FingerprintHandler(Context context) {
         appContext = context;
+
+        broadcaster = LocalBroadcastManager.getInstance(appContext);
+
     }
 
     public void startAuth(FingerprintManager manager,
                           FingerprintManager.CryptoObject cryptoObject) {
 
-        authenticationSuccessfull = false;
-
         cancellationSignal = new CancellationSignal();
+
 
         if (ActivityCompat.checkSelfPermission(appContext,
                 Manifest.permission.USE_FINGERPRINT) !=
@@ -47,7 +56,7 @@ public class FingerprintHandler extends
                 "Authentication error\n" + errString,
                 Toast.LENGTH_LONG).show();
 
-        authenticationSuccessfull = false;
+        sendResult("auth err");
     }
 
     @Override
@@ -56,6 +65,8 @@ public class FingerprintHandler extends
         Toast.makeText(appContext,
                 "Authentication help\n" + helpString,
                 Toast.LENGTH_LONG).show();
+
+        sendResult("auth err");
     }
 
     @Override
@@ -64,7 +75,7 @@ public class FingerprintHandler extends
                 "Authentication failed.",
                 Toast.LENGTH_LONG).show();
 
-        authenticationSuccessfull = false;
+        sendResult("fail");
     }
 
     @Override
@@ -73,6 +84,12 @@ public class FingerprintHandler extends
 
         Toast.makeText(appContext, "Authentication succeeded.", Toast.LENGTH_LONG).show();
 
-        authenticationSuccessfull = true;
+        sendResult("success");
+    }
+
+    public void sendResult(String message) {
+        Intent intent = new Intent(COPA_RESULT);
+        if(message != null) intent.putExtra(COPA_MESSAGE, message);
+        broadcaster.sendBroadcast(intent);
     }
 }

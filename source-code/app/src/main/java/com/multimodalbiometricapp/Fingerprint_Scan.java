@@ -20,7 +20,10 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.LocalBroadcastManager;
 import android.support.v7.app.AppCompatActivity;
 import android.view.KeyEvent;
+import android.view.View;
 import android.view.WindowManager;
+import android.widget.Button;
+import android.widget.LinearLayout;
 import android.widget.RelativeLayout;
 import android.widget.Toast;
 
@@ -55,13 +58,15 @@ public class Fingerprint_Scan extends AppCompatActivity {
     boolean isAuthenticated;
     BroadcastReceiver receiver;
 
-    RelativeLayout rl_parent;
+    LinearLayout ll_parent;
+    Button facerecogStart;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.fingerprint_scan_layout);
-        rl_parent = (RelativeLayout)findViewById(R.id.rl_fingerprint_parent);
+        ll_parent = (LinearLayout)findViewById(R.id.ll_fingerprint_mainlayout);
+        facerecogStart = (Button)findViewById(R.id.bt_fingerprint_facerecog);
 
         keyguardManager = (KeyguardManager) getSystemService(KEYGUARD_SERVICE);
 
@@ -100,18 +105,25 @@ public class Fingerprint_Scan extends AppCompatActivity {
                 String s = intent.getStringExtra("mess");
 
                 if (s.equals("success")) {
-                    rl_parent.setBackgroundColor(Color.parseColor("#228B22"));
+                    ll_parent.setBackgroundColor(Color.parseColor("#228B22"));
                 }
                 else if (s.equals("fail")) {
-                    rl_parent.setBackgroundColor(Color.parseColor("#FF4C4C"));
+                    ll_parent.setBackgroundColor(Color.parseColor("#FF4C4C"));
                 }
                 else if (s.equals("auth_err")) {
-                    rl_parent.setBackgroundColor(Color.parseColor("FFFF00"));
+                    ll_parent.setBackgroundColor(Color.parseColor("FFFF00"));
                 }
 
                 Toast.makeText(Fingerprint_Scan.this, s + "<-", Toast.LENGTH_SHORT).show();
             }
         };
+
+        facerecogStart.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(Fingerprint_Scan.this, MainActivity.class));
+            }
+        });
     }
 
     @Override

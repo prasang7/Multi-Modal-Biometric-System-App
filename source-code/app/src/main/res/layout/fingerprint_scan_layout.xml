@@ -1,11 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:orientation="vertical" android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:id="@+id/ll_fingerprint_mainlayout">
 
-    <RelativeLayout
+    <ImageView
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/fingerprint_imageicon"
+        android:layout_gravity="center"
+        android:layout_marginTop="40dp"/>
+
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:id="@+id/rl_fingerprint_parent"></RelativeLayout>
+        android:layout_height="wrap_content"
+        android:text="Fingerprint key image searching...\n\nFingerprint key image found in system.\n\nPlace your finger on the scanner..."
+        android:gravity="center"
+        android:layout_marginTop="20dp"
+        android:textSize="16dp"/>
+
+    <Button
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Face recognition"
+        android:layout_marginTop="100dp"
+        android:layout_marginRight="20dp"
+        android:layout_marginLeft="20dp"
+        android:id="@+id/bt_fingerprint_facerecog"/>
 
 </LinearLayout>

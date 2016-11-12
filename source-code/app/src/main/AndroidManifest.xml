@@ -25,6 +25,14 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".MainActivity"
+            android:label="Face Recognition">
+            <intent-filter>
+                <action android:name="android.intent.action.MAINACTIVITY" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+
         <activity android:name=".ImageCapture"
             android:configChanges="orientation|keyboard|keyboardHidden"
             android:screenOrientation="landscape">
